@@ -8,7 +8,7 @@ import java.sql.Statement;
 public class Utils {
 
     static Connection getConnection() throws SQLException {
-        String DB_URL = "jdbc:sqlite:test.db";
+        String DB_URL = "jdbc:sqlite:refactoring.db";
         return DriverManager.getConnection(DB_URL);
     }
 
@@ -21,7 +21,15 @@ public class Utils {
             Statement stmt = c.createStatement();
 
             stmt.executeUpdate(sql);
-            stmt.close();
+        }
+    }
+
+    public static void dropTables() throws SQLException {
+        try (Connection c = getConnection()) {
+            String sql = "DELETE FROM PRODUCT";
+            Statement stmt = c.createStatement();
+
+            stmt.executeUpdate(sql);
         }
     }
 
