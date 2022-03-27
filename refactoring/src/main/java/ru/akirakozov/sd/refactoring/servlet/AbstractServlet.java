@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public abstract class AbstractServlet extends HttpServlet {
-    private final ProductDao productDao;
+    protected final ProductDao productDao;
 
     public AbstractServlet(ProductDao productDao) {
         this.productDao = productDao;
@@ -27,8 +27,8 @@ public abstract class AbstractServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
+//        response.setContentType("text/html");
+//        response.setStatus(HttpServletResponse.SC_OK);
     }
 
 }
