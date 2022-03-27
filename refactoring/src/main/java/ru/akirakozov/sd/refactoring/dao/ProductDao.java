@@ -13,39 +13,53 @@ import static ru.akirakozov.sd.refactoring.dao.Utils.getConnection;
 
 public class ProductDao {
 
-    private ResultSet getQuery(String sqlQuery) throws SQLException{
-        try (Statement stmt = getConnection().createStatement()) {
-            return stmt.executeQuery(sqlQuery);
-        }
-    }
-
     public void insert(Product product) throws SQLException {
         try (Statement stmt = getConnection().createStatement()) {
             String sql = "INSERT INTO PRODUCT " +
-                         "(NAME, PRICE) VALUES " +
-                         "(\"" + product.getName() + "\"," + product.getPrice() + ")";
+                    "(NAME, PRICE) VALUES " +
+                    "(\"" + product.getName() + "\"," + product.getPrice() + ")";
             stmt.executeUpdate(sql);
         }
     }
 
     public List<Product> getProducts() throws SQLException {
-        return parseProducts(getQuery("SELECT * FROM PRODUCT"));
+        try (Statement stmt = getConnection().createStatement()) {
+            String sql = "SELECT * FROM PRODUCT";
+            ResultSet rs = stmt.executeQuery(sql);
+            return parseProducts(rs);
+        }
     }
 
     public Optional<Product> findMaxPriceProduct() throws SQLException {
-        return parseProducts(getQuery("SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1")).stream().findFirst();
+        try (Statement stmt = getConnection().createStatement()) {
+            String sql = "SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1";
+            ResultSet rs = stmt.executeQuery(sql);
+            return parseProducts(rs).stream().findFirst();
+        }
     }
 
     public Optional<Product> findMinPriceProduct() throws SQLException {
-        return parseProducts(getQuery("SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1")).stream().findFirst();
+        try (Statement stmt = getConnection().createStatement()) {
+            String sql = "SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1";
+            ResultSet rs = stmt.executeQuery(sql);
+            return parseProducts(rs).stream().findFirst();
+        }
     }
 
     public long getPricesSum() throws SQLException {
-        return getQuery("SELECT SUM(price) as sum FROM PRODUCT").getLong("sum");
+        try (Statement stmt = getConnection().createStatement()) {
+            String sql = "SELECT SUM(price) as sum FROM PRODUCT";
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.getLong("sum");
+        }
     }
 
     public int getProductsCount() throws SQLException {
-        return getQuery("SELECT COUNT(*) as cnt FROM PRODUCT").getInt("cnt");
+        try (Statement stmt = getConnection().createStatement()) {
+            String sql = "SELECT COUNT(*) as cnt FROM PRODUCT";
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.getInt("cnt");
+        }
     }
 
     private List<Product> parseProducts(ResultSet rs) throws SQLException {
